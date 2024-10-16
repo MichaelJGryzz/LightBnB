@@ -19,14 +19,18 @@ const users = require("./json/users.json");
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithEmail = function (email) {
-  let resolvedUser = null;
-  for (const userId in users) {
-    const user = users[userId];
-    if (user && user.email.toLowerCase() === email.toLowerCase()) {
-      resolvedUser = user;
-    }
-  }
-  return Promise.resolve(resolvedUser);
+  console.log('Email:', email); // Add this line to check the email value
+  return pool
+    .query(`SELECT * FROM users WHERE email = $1 LIMIT 1`, [email.toLowerCase()])
+    .then((result) => {
+      if(result.rows.length === 0) {
+        return null;
+      }
+      return result.rows[0];
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
 };
 
 /**
@@ -35,7 +39,18 @@ const getUserWithEmail = function (email) {
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithId = function (id) {
-  return Promise.resolve(users[id]);
+  console.log('User ID:', id); // Log the user ID for debugging
+  return pool
+    .query(`SELECT * FROM users WHERE id = $1 LIMIT 1`, [id])
+    .then((result) => {
+      if(result.rows.length === 0) {
+        return null;
+      }
+      return result.rows[0];
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
 };
 
 /**
@@ -44,12 +59,18 @@ const getUserWithId = function (id) {
  * @return {Promise<{}>} A promise to the user.
  */
 const addUser = function (user) {
-  const userId = Object.keys(users).length + 1;
-  user.id = userId;
-  users[userId] = user;
-  return Promise.resolve(user);
+  const { name, email, password} = user;
+  console.log('Adding user:', name, email); // Log the user details for debugging
+  return pool
+    .query(`INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *`, [name, email.toLowerCase(), password])
+    .then((result) => {
+      console.log('Inserted user:', result.rows[0]); // Log the inserted user
+      return result.rows[0]; // Return the newly inserted user
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
 };
-
 /// Reservations
 
 /**
