@@ -4,9 +4,14 @@ A simple multi-page Airbnb clone that uses server-side Javascript to display the
 
 ## Screenshots
 
+!["Screenshot of LighthouseBnB - login form"](https://github.com/MichaelJGryzz/LightBnB/blob/main/docs/LighthouseBnB-login-form.png?raw=true)
+!["Screenshot of LighthouseBnB - main page after login"](https://github.com/MichaelJGryzz/LightBnB/blob/main/docs/LighthouseBnB-main-page%20after-login.png?raw=true)
+!["Screenshot of LighthouseBnB - search filters form"](https://github.com/MichaelJGryzz/LightBnB/blob/main/docs/LighthouseBnB-search-filters-form.png?raw=true)
+!["Screenshot of LighthouseBnB - create listing form"](https://github.com/MichaelJGryzz/LightBnB/blob/main/docs/LighthouseBnB-create-listing-form.png?raw=true)
 
 ## ERD
 
+!["LightBnB Database ERD - "](https://github.com/MichaelJGryzz/LightBnB/blob/main/docs/LighthouseBnB%20ERD.png?raw=true)
 
 ## Getting Started
 
