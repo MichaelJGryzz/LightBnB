@@ -1,6 +1,8 @@
-# LightBnB Project
+# LighthouseBnB Project
 
-A simple multi-page Airbnb clone that uses server-side Javascript to display the information from queries to web pages via SQL queries.
+A simple multi-page "Airbnb clone" that uses server-side Javascript to display the information from queries to web pages via SQL queries.
+
+LighthouseBnB is an app that will revolutionize the travel industry. It will allow homeowners to rent out their homes to people on vacation, creating an alternative to hotels and bed and breakfasts...There’s nothing else like it! Users can view property information, book reservations, view their reservations, and write reviews.
 
 ## Screenshots
 
@@ -20,7 +22,7 @@ Create listings form:
 
 ### ERD Diagram:
 
-!["LightBnB Database ERD"](https://github.com/MichaelJGryzz/LightBnB/blob/main/docs/LighthouseBnB%20ERD.png?raw=true)
+!["LighthouseBnB Database ERD"](https://github.com/MichaelJGryzz/LightBnB/blob/main/docs/LighthouseBnB%20ERD.png?raw=true)
 
 ### ERD Information:
 
