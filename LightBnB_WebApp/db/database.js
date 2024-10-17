@@ -19,7 +19,6 @@ const users = require("./json/users.json");
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithEmail = function (email) {
-  console.log('Email:', email); // Add this line to check the email value
   return pool
     .query(`SELECT * FROM users WHERE email = $1 LIMIT 1`, [email.toLowerCase()])
     .then((result) => {
@@ -39,7 +38,6 @@ const getUserWithEmail = function (email) {
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithId = function (id) {
-  console.log('User ID:', id); // Log the user ID for debugging
   return pool
     .query(`SELECT * FROM users WHERE id = $1 LIMIT 1`, [id])
     .then((result) => {
@@ -60,11 +58,9 @@ const getUserWithId = function (id) {
  */
 const addUser = function (user) {
   const { name, email, password} = user;
-  console.log('Adding user:', name, email); // Log the user details for debugging
   return pool
     .query(`INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *`, [name, email.toLowerCase(), password])
     .then((result) => {
-      console.log('Inserted user:', result.rows[0]); // Log the inserted user
       return result.rows[0]; // Return the newly inserted user
     })
     .catch((err) => {
@@ -173,15 +169,10 @@ const getAllProperties = function (options, limit = 10) {
   LIMIT $${queryParams.length};
   `;
 
-  // 5 - Console log everything just to make sure we've done it right (debugging)
-  console.log('Query:', queryString);
-  console.log('Params:', queryParams);
-
-  // 6 - Run the query
+  // 5 - Run the query
   return pool
     .query(queryString, queryParams)
     .then((result) => {
-      console.log(result.rows);
       return result.rows;
     })
     .catch((err) => {
