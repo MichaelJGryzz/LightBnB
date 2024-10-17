@@ -109,9 +109,77 @@ const getAllReservations = function (guest_id, limit = 10) {
  * @return {Promise<[{}]>}  A promise to the properties.
  */
 const getAllProperties = function (options, limit = 10) {
-  console.log('Limit:', limit); // Add this line to check the limit value
+  // 1- Setup an array to hold any parameters that may be available for the query
+  const queryParams = [];
+  // 2 - Start the query with all information that comes before the WHERE clause
+  let queryString = `
+  SELECT properties.*, avg(property_reviews.rating) as average_rating
+  FROM properties
+  LEFT JOIN property_reviews ON properties.id = property_id
+  `;
+
+  // Array to store conditions for the WHERE clause
+  const whereFilters = [];
+  const havingFilters = [];
+
+  // 3 FILTERS
+  // Filter by city
+  if (options.city) {
+    queryParams.push(`%${options.city}%`);
+    whereFilters.push(`city LIKE $${queryParams.length}`);
+  }
+
+   // Filter by owner_id
+   if (options.owner_id) {
+    queryParams.push(options.owner_id);
+    whereFilters.push(`owner_id = $${queryParams.length}`);
+  }
+
+  // Filter by minimum price per night
+  if (options.minimum_price_per_night) {
+    queryParams.push(options.minimum_price_per_night * 100); // Convert dollars to cents
+    whereFilters.push(`cost_per_night >= $${queryParams.length}`);
+  }
+
+  // Filter by maximum price per night
+  if (options.maximum_price_per_night) {
+    queryParams.push(options.maximum_price_per_night * 100); // Convert dollars to cents
+    whereFilters.push(`cost_per_night <= $${queryParams.length}`);
+  }
+
+  // Add WHERE clause if there are any filters present in whereFilters array
+  if (whereFilters.length > 0) {
+    queryString += `WHERE ${whereFilters.join(' AND ')} `;
+  }
+
+  // Add GROUP BY clause
+  queryString += `GROUP BY properties.id `;
+
+  // Filter by minimum rating (using HAVING clause)
+  if (options.minimum_rating) {
+    queryParams.push(options.minimum_rating)
+    havingFilters.push(`avg(property_reviews.rating) >= $${queryParams.length}`);
+  }
+
+  // Add HAVING clause if there are any filters present in havingFilters array
+  if (havingFilters.length > 0) {
+    queryString += `HAVING ${havingFilters.join(' AND ')} `;
+  }
+
+  // 4 - Add any query that comes after the HAVING clause
+  queryParams.push(limit);
+  queryString += `
+  ORDER BY cost_per_night
+  LIMIT $${queryParams.length};
+  `;
+
+  // 5 - Console log everything just to make sure we've done it right (debugging)
+  console.log('Query:', queryString);
+  console.log('Params:', queryParams);
+
+  // 6 - Run the query
   return pool
-    .query(`SELECT * FROM properties LIMIT $1`, [limit])
+    .query(queryString, queryParams)
     .then((result) => {
       console.log(result.rows);
       return result.rows;
